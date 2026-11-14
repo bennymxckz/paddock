@@ -21,3 +21,7 @@ globals:
     any: true
   core_modmanager:
     any: true
+  ui_vehicleSelector_general:
+    any: true
+  ui_vehicleSelector_tiles:
+    any: true
