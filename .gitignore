@@ -1,0 +1,15 @@
+# Build output
+/dist/
+
+# Python
+__pycache__/
+
+# Editors and OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Tools installed by tools/install_tools.py
+/tools/bin/

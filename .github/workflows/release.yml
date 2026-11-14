@@ -1,0 +1,36 @@
+name: Release
+
+# Pushing a tag like v0.2.0 builds the mod zip and publishes a GitHub Release
+# with that version's CHANGELOG section. The tag must match M.version in the
+# source. 0.x versions are marked as pre-releases.
+
+on:
+  push:
+    tags: ["v*.*.*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Publish release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Check the tag matches the source version
+        run: python tools/build.py --check-tag "${GITHUB_REF_NAME}"
+      - name: Build the mod zip
+        run: python tools/build.py
+      - name: Release notes from CHANGELOG.md
+        run: python tools/build.py --notes > release-notes.md
+      - name: Publish
+        uses: softprops/action-gh-release@v3
+        with:
+          name: Paddock ${{ github.ref_name }}
+          body_path: release-notes.md
+          files: dist/paddock.zip
+          prerelease: ${{ startsWith(github.ref_name, 'v0.') || contains(github.ref_name, '-') }}
+          fail_on_unmatched_files: true

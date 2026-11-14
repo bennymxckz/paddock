@@ -1,0 +1,6 @@
+# Ruff lints and formats the Python tools in tools/.
+line-length = 120
+target-version = "py310"
+
+[lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM"]

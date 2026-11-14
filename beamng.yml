@@ -1,0 +1,21 @@
+# Globals the BeamNG.drive game engine Lua (GE) provides, as far as Paddock
+# uses them. Add new ones here when the code starts using them.
+---
+base: lua51
+name: beamng
+globals:
+  log:
+    args:
+      - type: string
+      - type: string
+      - type: any
+  extensions:
+    any: true
+  setExtensionUnloadMode:
+    args:
+      - type: string
+      - type: string
+  core_vehicles:
+    any: true
+  FS:
+    any: true

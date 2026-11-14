@@ -1,0 +1,2 @@
+# Python development tools. Install with: pip install -r tools/requirements-dev.txt
+ruff==0.17.5

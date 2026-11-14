@@ -1,0 +1,2 @@
+# BeamNG runs LuaJIT (Lua 5.1) with its own globals; see beamng.yml.
+std = "lua51+beamng"

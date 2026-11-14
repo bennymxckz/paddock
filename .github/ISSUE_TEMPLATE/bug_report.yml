@@ -1,0 +1,59 @@
+name: Bug report
+description: Something in Paddock doesn't work as described.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Please check the [open issues](https://github.com/bennymxckz/paddock/issues) first.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what happened instead.
+      placeholder: |
+        1. Opened the vehicle selector
+        2. Opened the Modded group
+        3. ...
+    validations:
+      required: true
+  - type: input
+    id: paddock-version
+    attributes:
+      label: Paddock version
+      description: Shown in the console line `Paddock X.Y.Z ...`, or the release you downloaded.
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: input
+    id: game-version
+    attributes:
+      label: BeamNG.drive version
+      description: Shown in the main menu's bottom corner.
+      placeholder: "0.40.5"
+    validations:
+      required: true
+  - type: textarea
+    id: mods
+    attributes:
+      label: Other mods
+      description: The mods you have enabled, especially vehicle selector, UI or vehicle mods involved.
+    validations:
+      required: false
+  - type: textarea
+    id: log
+    attributes:
+      label: Console output
+      description: |
+        Lines tagged `paddock`, and any errors around them. Open the console with `~`,
+        or attach `beamng.log` from your user folder.
+      render: text
+    validations:
+      required: false
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I tested with only Paddock and the vehicle mods involved enabled.
+          required: false
