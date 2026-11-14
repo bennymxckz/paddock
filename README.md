@@ -18,6 +18,8 @@ among the game's own cars.
   and recent vehicles stay on top.
 - **Config packs count too.** Configs that a mod adds to a game vehicle are listed
   under Modded, while your own saved configs stay with the game's vehicles.
+- **Random picks land in Modded.** When the random vehicle button picks a modded
+  car, it opens under Modded too.
 - **Nothing else changes.** Automation cars keep their own group, and every other
   "Group by" option works as before.
 - **No game files replaced.** Paddock hooks the selector's grouping at runtime. If
