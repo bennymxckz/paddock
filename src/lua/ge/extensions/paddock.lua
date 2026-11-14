@@ -27,6 +27,7 @@ local openGroup -- the group whose configs the selector is listing
 
 local gamePath
 local modelCache = {} -- model key -> whether the model comes from a mod
+local configCache = {} -- config file -> whether it comes from a mod
 
 -- Whether a file is mounted from the game's own folder (the same test the game
 -- uses to label vehicles "BeamNG - Official").
@@ -35,6 +36,21 @@ local function fromGame(path)
   local origin = FS:getFileOriginInfo(path)
   local mount = origin and origin.mountPath
   return type(mount) == "string" and mount:sub(1, #gamePath) == gamePath
+end
+
+-- Whether a file comes from an installed mod, found the way the game finds a
+-- config's mod. Files in the player's own folder (saved configs) belong to no
+-- mod.
+local function fromMod(path)
+  if type(path) ~= "string" or fromGame(path) then
+    return false
+  end
+  local modmanager = core_modmanager
+  if not modmanager or type(modmanager.getModFromOriginArchivePath) ~= "function" then
+    return false
+  end
+  local origin = FS:getFileOriginInfo(path)
+  return origin ~= nil and modmanager.getModFromOriginArchivePath(origin.archivePath) ~= nil
 end
 
 local function isModdedModel(modelKey)
@@ -60,11 +76,26 @@ local function isModded(config)
   if isModdedModel(config.model_key) then
     return true
   end
-  return config.modID ~= nil
+  -- modID is only set for mods from the BeamNG repository, so mods installed
+  -- from a zip are found from the config file's origin.
+  if config.modID ~= nil then
+    return true
+  end
+  local pc = config.pcFilename
+  if type(pc) ~= "string" then
+    return false
+  end
+  local cached = configCache[pc]
+  if cached == nil then
+    cached = fromMod(pc)
+    configCache[pc] = cached
+  end
+  return cached
 end
 
 local function forget()
   modelCache = {}
+  configCache = {}
 end
 
 -- Lists a modded config in the Modded group (when grouping by Type).
@@ -88,14 +119,21 @@ end
 
 -- Opening a car in a group lists the configs that belong to that group,
 -- checked from their Type alone. Inside the Modded group a modded config's
--- Type reads as Modded, so its configs are found. Anywhere else (such as the
--- random vehicle button, which opens a car through its type group) it reads
--- as usual.
+-- Type reads as Modded, so its configs are found. In a game vehicle's own
+-- group, configs a mod adds to it read as Modded too, so they are listed only
+-- under Modded. A modded vehicle's configs read as usual outside Modded,
+-- because the random vehicle button opens a car through its type group.
 local function getConfigOrModelPropValue(config, prop)
-  if prop == "Type" and openGroup == groupName then
+  if prop == "Type" and openGroup ~= nil then
     local ok, modded = pcall(isModded, config)
     if ok and modded then
-      return moddedType
+      if openGroup == groupName then
+        return moddedType
+      end
+      local okModel, moddedModel = pcall(isModdedModel, config.model_key)
+      if okModel and not moddedModel then
+        return moddedType
+      end
     end
   end
   return original.getConfigOrModelPropValue(config, prop)

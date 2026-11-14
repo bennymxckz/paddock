@@ -19,3 +19,5 @@ globals:
     any: true
   FS:
     any: true
+  core_modmanager:
+    any: true
