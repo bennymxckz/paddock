@@ -146,8 +146,66 @@ local function typeGroup(value)
   return original.typeGroup(value)
 end
 
+-- The random vehicle button picks a config, marks it to be selected, and opens
+-- its car in the group its Type gives (Cars and Trucks for a modded car).
+-- Paddock notes the config the button marks and, if it's modded, opens the car
+-- in the Modded group instead, where the player finds it.
+local picking = false -- a selector button is running
+local picked -- the config that button marked to be selected
+
+local function overrideDefaultSelectedTile(tile, ...)
+  if picking then
+    picked = tile
+  end
+  return original.overrideDefaultSelectedTile(tile, ...)
+end
+
+local function openInModded(data)
+  local path = type(data) == "table" and type(data.gotoPath) == "table" and data.gotoPath.keys
+  if
+    type(path) == "table"
+    and path[1] == "configsForBrandSubModelOrModel"
+    and path[5] == "Type"
+    and path[6] ~= groupName
+    and isModded(picked)
+  then
+    path[6] = groupName
+  end
+end
+
+local function executeButton(...)
+  picking, picked = true, nil
+  local data = original.executeButton(...)
+  picking = false
+  pcall(openInModded, data)
+  picked = nil
+  return data
+end
+
+-- The selector's UI extensions can load after Paddock, so this is tried again
+-- whenever the selector lists vehicles.
+local function hookRandom()
+  if original.executeButton or not grouping then
+    return
+  end
+  local general, tiles = ui_vehicleSelector_general, ui_vehicleSelector_tiles
+  if
+    type(general) ~= "table"
+    or type(tiles) ~= "table"
+    or type(general.executeButton) ~= "function"
+    or type(tiles.overrideDefaultSelectedTile) ~= "function"
+  then
+    return
+  end
+  original.executeButton = general.executeButton
+  original.overrideDefaultSelectedTile = tiles.overrideDefaultSelectedTile
+  general.executeButton = executeButton
+  tiles.overrideDefaultSelectedTile = overrideDefaultSelectedTile
+end
+
 local function onVehicleSelectorGetTiles(_, _, _, _, groupMode, name)
   openGroup = groupMode == "Type" and name or nil
+  hookRandom()
 end
 
 local function hook()
@@ -173,6 +231,7 @@ local function hook()
   mod.getGroupsForConfig = getGroupsForConfig
   mod.getConfigOrModelPropValue = getConfigOrModelPropValue
   mod.groupModeFunctions.Type = typeGroup
+  hookRandom()
   log("I", logTag, "Paddock " .. M.version .. ': modded vehicles are grouped as "' .. groupName .. '"')
 end
 
@@ -188,12 +247,20 @@ local function unhook()
       grouping.groupModeFunctions.Type = original.typeGroup
     end
   end
+  local general, tiles = ui_vehicleSelector_general, ui_vehicleSelector_tiles
+  if type(general) == "table" and general.executeButton == executeButton then
+    general.executeButton = original.executeButton
+  end
+  if type(tiles) == "table" and tiles.overrideDefaultSelectedTile == overrideDefaultSelectedTile then
+    tiles.overrideDefaultSelectedTile = original.overrideDefaultSelectedTile
+  end
   grouping, original, openGroup = nil, {}, nil
 end
 
 M.onExtensionLoaded = hook
 M.onExtensionUnloaded = unhook
 M.onVehicleSelectorGetTiles = onVehicleSelectorGetTiles
+M.onGridSelectorGetTiles = hookRandom
 -- Mods can be switched on and off while the game runs.
 M.onModActivated = forget
 M.onModDeactivated = forget
