@@ -1,6 +1,9 @@
-# Paddock
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/assets/banner-dark.svg">
+  <img alt="Paddock: modded vehicles, grouped." src=".github/assets/banner-light.svg">
+</picture>
 
-**Modded vehicles, grouped.** Paddock is a BeamNG.drive mod that gives every modded
+Paddock is a BeamNG.drive mod that gives every modded
 vehicle its own **Modded** group in the vehicle selector, so mods stop getting lost
 among the game's own cars.
 
