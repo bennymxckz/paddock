@@ -7,14 +7,18 @@ and Paddock follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-11-14
+
 ### Added
 
 - A **Modded** group in the vehicle selector, above Cars and Trucks, holding every
   vehicle that comes from a mod.
 - Configs that a mod adds to a game vehicle are listed under Modded too; the
   player's own saved configs stay with the game's vehicles.
+- The random vehicle button opens a modded car under Modded.
 - Automation vehicles keep their own group.
 - If the game's selector code changes, Paddock logs a warning and leaves the
   selector unchanged.
 
-[Unreleased]: https://github.com/bennymxckz/paddock/commits/main
+[Unreleased]: https://github.com/bennymxckz/paddock/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/bennymxckz/paddock/releases/tag/v0.1.0
