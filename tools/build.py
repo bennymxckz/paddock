@@ -7,9 +7,9 @@
     python tools/build.py --notes         # prints this version's CHANGELOG section
 
 The zip is deterministic: entries are sorted and carry a fixed timestamp, so
-the same source always gives a byte-identical zip. The license is packed as
-scripts/paddock/LICENSE.txt, inside Paddock's own folder, so it can't clash
-with another mod's files in the game's virtual filesystem.
+the same source always gives a byte-identical zip. The MIT notice travels in
+the header of paddock.lua (BeamNG's repository doesn't allow readme files in
+mods), and the build fails if it's missing or differs from LICENSE.
 """
 
 from __future__ import annotations
@@ -55,14 +55,25 @@ def add(zf: zipfile.ZipFile, name: str, data: bytes) -> None:
     zf.writestr(info, data)
 
 
+def check_license() -> None:
+    """The license text in paddock.lua's header must match LICENSE."""
+    lines = []
+    for line in EXTENSION.read_text(encoding="utf-8").splitlines():
+        if not line.startswith("--"):
+            break
+        lines.append(line[3:] if line.startswith("-- ") else "")
+    if LICENSE.read_text(encoding="utf-8").strip() not in "\n".join(lines):
+        sys.exit(f"error: the license in the header of {EXTENSION.relative_to(ROOT)} doesn't match LICENSE")
+
+
 def build() -> pathlib.Path:
+    check_license()
     DIST.mkdir(exist_ok=True)
     out = DIST / ZIP_NAME
     files = sorted(p for p in SRC.rglob("*") if p.is_file())
     with zipfile.ZipFile(out, "w") as zf:
         for path in files:
             add(zf, path.relative_to(SRC).as_posix(), path.read_bytes())
-        add(zf, "scripts/paddock/LICENSE.txt", LICENSE.read_bytes())
     return out
 
 
