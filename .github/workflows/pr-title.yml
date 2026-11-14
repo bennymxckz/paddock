@@ -31,7 +31,9 @@ jobs:
             chore
             revert
           requireScope: false
-          subjectPattern: ^[a-z].+[^.]$
+          # Lowercase, or a version number for release titles ("chore(release): 1.2.3").
+          subjectPattern: ^([a-z].*[^.]|\d+\.\d+\.\d+(-[0-9A-Za-z.-]*[0-9A-Za-z])?)$
           subjectPatternError: |
-            The subject "{subject}" should start with a lowercase letter and not end with a period,
+            The subject "{subject}" should start with a lowercase letter (or be a version
+            number, for releases) and not end with a period,
             e.g. "fix: keep favourites above the Modded group".
