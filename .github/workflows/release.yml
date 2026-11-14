@@ -2,7 +2,7 @@ name: Release
 
 # Pushing a tag like v0.2.0 builds the mod zip and publishes a GitHub Release
 # with that version's CHANGELOG section. The tag must match M.version in the
-# source. 0.x versions are marked as pre-releases.
+# source. Versions with a suffix (v0.2.0-rc.1) are marked as pre-releases.
 
 on:
   push:
@@ -32,5 +32,5 @@ jobs:
           name: Paddock ${{ github.ref_name }}
           body_path: release-notes.md
           files: dist/paddock.zip
-          prerelease: ${{ startsWith(github.ref_name, 'v0.') || contains(github.ref_name, '-') }}
+          prerelease: ${{ contains(github.ref_name, '-') }}
           fail_on_unmatched_files: true

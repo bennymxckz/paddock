@@ -154,8 +154,8 @@ versions may change behaviour.
    ```
 
 3. The release workflow checks the tag matches `M.version`, builds `paddock.zip`
-   and publishes a GitHub Release with the changelog section. 0.x releases are
-   marked as pre-releases.
+   and publishes a GitHub Release with the changelog section. Versions with a
+   suffix, like `0.2.0-rc.1`, are marked as pre-releases.
 4. Upload that same `paddock.zip` to the BeamNG repository.
 
 ## Game updates
