@@ -32,7 +32,7 @@
 
 local M = {}
 
-M.version = "0.1.0"
+M.version = "0.1.1"
 
 local logTag = "paddock"
 local groupingModule = "/lua/ge/extensions/ui/vehicleSelector/tileGrouping"

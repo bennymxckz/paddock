@@ -66,7 +66,7 @@ mod. Automation vehicles are left in their own group.
 If the Modded group doesn't appear, open the console (<kbd>~</kbd>) and look for
 lines tagged `paddock`:
 
-- `Paddock 0.1.0: modded vehicles are grouped as "Modded"` means it's running.
+- `Paddock 0.1.1: modded vehicles are grouped as "Modded"` means it's running.
 - `The vehicle selector's grouping isn't where Paddock expects it` means a game
   update changed the selector. Please [open an issue](https://github.com/bennymxckz/paddock/issues/new/choose).
 
