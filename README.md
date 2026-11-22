@@ -33,7 +33,9 @@ among the game's own cars.
 
 ## Install
 
-**BeamNG repository:** coming with the first public release.
+**BeamNG repository (recommended):** subscribe to
+[Paddock on the BeamNG repository](https://www.beamng.com/resources/paddock.40343/),
+or find it in the in-game repository. It updates automatically.
 
 **Manually:** download `paddock.zip` from the
 [latest release](https://github.com/bennymxckz/paddock/releases), put it in your
